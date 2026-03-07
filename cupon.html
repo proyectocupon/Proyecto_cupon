@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Redimir Cupón</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+body{
+background: linear-gradient(135deg,#f5f7fa,#c3cfe2);
+min-height:100vh;
+}
+
+.card-cupon{
+border-radius:15px;
+}
+
+.precio{
+font-size:28px;
+font-weight:bold;
+color:#198754;
+}
+
+.resultado{
+border-radius:10px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+    <nav class="navbar navbar-dark bg-dark shadow">
+
+    <div class="container">
+
+    <a href="panel.html" class="navbar-brand">
+    ← Volver al panel
+    </a>
+
+    </div>
+
+    </nav>
+
+
+
+    <div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+    <div class="col-md-6">
+
+    <div class="card card-cupon shadow-lg p-4">
+
+    <h3 class="text-center mb-4">
+        Redimir Cupón
+    </h3>
+
+
+    <div class="mb-3">
+
+    <label class="form-label fw-bold">
+    Producto seleccionado
+    </label>
+
+    <div class="alert alert-light border">
+
+    <strong id="nombreProducto"></strong>
+
+    </div>
+
+    </div>
+
+
+    <div class="mb-3">
+
+    <label class="form-label fw-bold">
+    Precio original
+    </label>
+
+    <div class="precio">
+    $ <span id="precioProducto"></span>
+    </div>
+
+    </div>
+
+
+    <div class="mb-4">
+
+    <label class="form-label fw-bold">
+    Seleccionar cupón disponible
+    </label>
+
+    <select id="cuponSelect" class="form-select form-select-lg">
+
+    <option value="">Selecciona un cupón</option>
+
+    <option value="DESC10">
+    DESC10 — 10% de descuento
+    </option>
+
+    <option value="PROMO20">
+    PROMO20 — 20% de descuento
+    </option>
+
+    <option value="AHORRA50">
+    AHORRA50 — $15000 de descuento
+    </option>
+
+    </select>
+
+    </div>
+
+
+    <div class="d-grid">
+
+    <button class="btn btn-success btn-lg" onclick="aplicarCupon()">
+    Aplicar Cupón
+    </button>
+
+    </div>
+
+
+    <div id="mensaje" class="mt-4"></div>
+
+    </div>
+
+    </div>
+
+    </div>
+
+    </div>
+
+
+
+<script>
+
+
+const params = new URLSearchParams(window.location.search)
+
+const producto = params.get("producto")
+const precio = parseFloat(params.get("precio"))
+
+document.getElementById("nombreProducto").innerText = producto
+document.getElementById("precioProducto").innerText = precio
+
+
+const cupones = {
+
+"DESC10":{tipo:"porcentaje",valor:10},
+"PROMO20":{tipo:"porcentaje",valor:20},
+"AHORRA50":{tipo:"fijo",valor:15000}
+
+}
+
+
+function aplicarCupon(){
+
+let codigo = document.getElementById("cuponSelect").value
+
+if(codigo === ""){
+
+document.getElementById("mensaje").innerHTML =
+
+`<div class="alert alert-warning resultado">
+Selecciona un cupón disponible
+</div>`
+
+return
+
+}
+
+let datos = cupones[codigo]
+
+let descuento = 0
+
+if(datos.tipo === "porcentaje"){
+descuento = precio * (datos.valor/100)
+}else{
+descuento = datos.valor
+}
+
+if(descuento > precio){
+descuento = precio
+}
+
+let final = precio - descuento
+
+
+document.getElementById("mensaje").innerHTML =
+
+`<div class="card resultado shadow-sm">
+
+<div class="card-body">
+
+<h5 class="text-success mb-3">
+Cupón aplicado
+</h5>
+
+<p>
+<strong>Producto:</strong> ${producto}
+</p>
+
+<p>
+<strong>Precio original:</strong> $${precio}
+</p>
+
+<p>
+<strong>Descuento:</strong> $${descuento}
+</p>
+
+<hr>
+
+<h4 class="text-primary">
+Total a pagar: $${final}
+</h4>
+
+</div>
+
+</div>`
+
+}
+
+</script>
+
+</body>
+</html>
